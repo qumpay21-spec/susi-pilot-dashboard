@@ -105,7 +105,18 @@ The frontend reads the API URL from `NUXT_PUBLIC_API_BASE` (default `http://loca
 
 ## Deploy
 
-**API (Render, Railway, Cloud Run…)**
+Both apps run on **Railway** as two services from this repo; each folder has a `railway.json`.
+
+| Service | Root | Build | Start | Variables |
+| --- | --- | --- | --- | --- |
+| API | `backend` | `npm run build` | `npm run start:prod` | `CORS_ORIGIN=https://<web-domain>` |
+| Web | `frontend` | `npm run build` | `node .output/server/index.mjs` | `NUXT_PUBLIC_API_BASE=https://<api-domain>/api` |
+
+`NUXT_PUBLIC_API_BASE` is read at runtime by the Nuxt server, so changing it only needs a restart.
+
+### Other platforms
+
+**API (Render, Cloud Run…)**
 - Root: `backend`, build `npm ci && npm run build`, start `npm run start:prod`.
 - Env: `CORS_ORIGIN=https://<your-frontend-domain>`; `PORT` is set by the platform.
 - `render.yaml` is included for Render.
