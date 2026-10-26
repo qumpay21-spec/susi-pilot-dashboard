@@ -12,8 +12,9 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      // Override with NUXT_PUBLIC_API_BASE at build time, e.g. https://api.example.com/api
-      apiBase: 'http://localhost:3001/api',
+      // Production build is served by the NestJS API itself, so the API is on the same origin.
+      // Override with NUXT_PUBLIC_API_BASE, e.g. https://api.example.com/api
+      apiBase: process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:3001/api',
     },
   },
 

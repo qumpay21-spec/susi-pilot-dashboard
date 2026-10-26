@@ -1,16 +1,16 @@
-# Render blueprint for the API (https://render.com/docs/blueprint-spec).
-# The frontend is a static site and can go to Vercel, Netlify or Render Static Sites.
+# Render blueprint (https://render.com/docs/blueprint-spec).
+# One web service: builds the Nuxt frontend as static files, builds the NestJS API,
+# and the API serves both the frontend and /api from the same URL.
 services:
   - type: web
-    name: susi-pilot-api
+    name: susi-pilot-portal
     runtime: node
-    rootDir: backend
     plan: free
-    buildCommand: npm ci && npm run build
-    startCommand: npm run start:prod
+    buildCommand: >-
+      cd frontend && npm ci && npm run generate &&
+      cd ../backend && npm ci && npm run build
+    startCommand: cd backend && npm run start:prod
     healthCheckPath: /api/health
     envVars:
       - key: NODE_VERSION
         value: 22
-      - key: CORS_ORIGIN
-        sync: false

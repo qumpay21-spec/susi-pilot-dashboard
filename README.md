@@ -105,14 +105,23 @@ The frontend reads the API URL from `NUXT_PUBLIC_API_BASE` (default `http://loca
 
 ## Deploy
 
-Both apps run on **Railway** as two services from this repo; each folder has a `railway.json`.
+The live app runs on **Render as a single web service** (`render.yaml`):
+the Nuxt frontend is built as static files and served by the NestJS API, so the page and `/api` share one URL (no CORS setup needed).
+
+- Build: `cd frontend && npm ci && npm run generate && cd ../backend && npm ci && npm run build`
+- Start: `cd backend && npm run start:prod`
+- Health check: `/api/health`
+
+The production frontend calls `/api` on the same origin by default.
+
+### Separate services
+
+Each folder also has a `railway.json` for running the API and the web app as two services.
 
 | Service | Root | Build | Start | Variables |
 | --- | --- | --- | --- | --- |
 | API | `backend` | `npm run build` | `npm run start:prod` | `CORS_ORIGIN=https://<web-domain>` |
 | Web | `frontend` | `npm run build` | `node .output/server/index.mjs` | `NUXT_PUBLIC_API_BASE=https://<api-domain>/api` |
-
-`NUXT_PUBLIC_API_BASE` is read at runtime by the Nuxt server, so changing it only needs a restart.
 
 ### Other platforms
 
