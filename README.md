@@ -6,11 +6,11 @@ It shows a pilot's **duty roster**, **document validity** and **flight time agai
 | Layer    | Stack                                  |
 | -------- | -------------------------------------- |
 | Frontend | Nuxt 4, Vue 3, Pinia, TypeScript       |
-| Backend  | NestJS 12, TypeScript, REST API        |
+| Backend  | NestJS 11, TypeScript, REST API        |
 | Data     | `mock-schedules.json`, `mock-documents.json`, `mock-flight-hours.json` |
 
-- **Live app:** _add URL_
-- **API:** _add URL_/api/health
+- **Live app:** https://susi-pilot-portal.vercel.app
+- **API:** https://susi-pilot-api.vercel.app/api/health
 
 ---
 
@@ -104,7 +104,9 @@ The frontend reads the API URL from `NUXT_PUBLIC_API_BASE` (default `http://loca
 
 ## Deploy
 
-The live app runs on **Render as a single web service** (`render.yaml`):
+**Live setup (Vercel):** the API (`backend`, NestJS, `vercel.json`) and the web app (`frontend`, Nuxt, `NUXT_PUBLIC_API_BASE=https://susi-pilot-api.vercel.app/api`) are two Vercel projects.
+
+**Single-service option (Render/Railway):** `render.yaml` / root `railway.json`:
 the Nuxt frontend is built as static files and served by the NestJS API, so the page and `/api` share one URL (no CORS setup needed).
 
 - Build: `cd frontend && npm ci && npm run generate && cd ../backend && npm ci && npm run build`
