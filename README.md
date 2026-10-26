@@ -69,10 +69,9 @@ Invalid input returns `400` with a clear message (e.g. `range must be one of: 1w
 
 ```
 backend/
-  data/                 mock JSON files
   src/
     common/date.util.ts UTC date helpers (no time-zone drift)
-    data/               loads the JSON once (swap for a DB repository later)
+    data/               mock JSON (bundled with the code) + DataService (swap for a DB repository later)
     schedules/          roster normalisation
     documents/          expiry status rules
     flight-hours/       rolling-window totals + pilot profile

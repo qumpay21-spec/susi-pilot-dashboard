@@ -1,35 +1,29 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { DocumentsFile, FlightHoursFile, SchedulesFile } from './data.types';
+// Imported (not read from disk) so the data is bundled with the code,
+// which keeps it working on serverless hosts such as Vercel.
+import documentsJson from './mock/mock-documents.json';
+import flightHoursJson from './mock/mock-flight-hours.json';
+import schedulesJson from './mock/mock-schedules.json';
 
 /**
- * Loads the mock JSON files once at startup and keeps them in memory.
+ * Holds the mock data in memory.
  * This is the only place that knows where the data comes from, so it can be
  * swapped for a database repository later without touching the feature modules.
  */
 @Injectable()
 export class DataService implements OnModuleInit {
-  private readonly logger = new Logger(DataService.name);
-  private readonly dataDir = process.env.DATA_DIR ?? join(process.cwd(), 'data');
-
   schedules: SchedulesFile;
   documents: DocumentsFile;
   flightHours: FlightHoursFile;
 
   onModuleInit() {
-    this.schedules = this.load<SchedulesFile>('mock-schedules.json');
-    this.documents = this.load<DocumentsFile>('mock-documents.json');
-    this.flightHours = this.load<FlightHoursFile>('mock-flight-hours.json');
+    // Deep copies so sorting never mutates the imported modules.
+    this.schedules = structuredClone(schedulesJson) as SchedulesFile;
+    this.documents = structuredClone(documentsJson) as DocumentsFile;
+    this.flightHours = structuredClone(flightHoursJson) as FlightHoursFile;
     // Sort once so every consumer can rely on chronological order.
     this.flightHours.flightHours.sort((a, b) => a.date.localeCompare(b.date));
     this.schedules.schedules.sort((a, b) => a.duty_date.localeCompare(b.duty_date));
-  }
-
-  private load<T>(file: string): T {
-    const path = join(this.dataDir, file);
-    const data = JSON.parse(readFileSync(path, 'utf8')) as T;
-    this.logger.log(`Loaded ${file}`);
-    return data;
   }
 }
