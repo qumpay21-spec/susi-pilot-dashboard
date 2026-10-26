@@ -1,0 +1,13 @@
+{
+  "name": "susi-pilot-portal",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Builds the Nuxt frontend and the NestJS API; the API serves both on one URL.",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "cd frontend && npm ci && npm run generate && cd ../backend && npm ci && npm run build",
+    "start": "cd backend && npm run start:prod"
+  }
+}
