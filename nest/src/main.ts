@@ -15,7 +15,7 @@ async function bootstrap() {
 
   // When the frontend has been built (`nuxt generate`), serve it from the same server,
   // so the whole app runs as one service on one URL.
-  const webDir = resolve(process.env.WEB_DIR ?? join(process.cwd(), '..', 'frontend', '.output', 'public'));
+  const webDir = resolve(process.env.WEB_DIR ?? join(process.cwd(), '..', 'nuxt', '.output', 'public'));
   if (existsSync(join(webDir, 'index.html'))) {
     app.useStaticAssets(webDir);
     console.log(`Serving frontend from ${webDir}`);

@@ -68,14 +68,14 @@ Invalid input returns `400` with a clear message (e.g. `range must be one of: 1w
 ## Project structure
 
 ```
-backend/
+nest/                    NestJS API
   src/
     common/date.util.ts UTC date helpers (no time-zone drift)
     data/               mock JSON (bundled with the code) + DataService (swap for a DB repository later)
     schedules/          roster normalisation
     documents/          expiry status rules
     flight-hours/       rolling-window totals + pilot profile
-frontend/
+nuxt/                    Nuxt web app
   app/
     stores/dashboard.ts Pinia store: data, per-card loading/error, selections
     components/         DutyCalendar, DayDetail, DocumentList, FlightHoursChart, LimitTiles, UpcomingDuties
@@ -90,12 +90,12 @@ Requirements: Node.js 22+.
 
 ```bash
 # 1. API → http://localhost:3001/api
-cd backend
+cd nest
 npm install
 npm run start:dev
 
 # 2. Web → http://localhost:3000
-cd frontend
+cd nuxt
 npm install
 npm run dev
 ```
@@ -104,13 +104,13 @@ The frontend reads the API URL from `NUXT_PUBLIC_API_BASE` (default `http://loca
 
 ## Deploy
 
-**Live setup (Vercel):** the API (`backend`, NestJS, `vercel.json`) and the web app (`frontend`, Nuxt, `NUXT_PUBLIC_API_BASE=https://susi-pilot-api.vercel.app/api`) are two Vercel projects.
+**Live setup (Vercel):** the API (`nest`, NestJS, `vercel.json`) and the web app (`nuxt`, Nuxt, `NUXT_PUBLIC_API_BASE=https://susi-pilot-api.vercel.app/api`) are two Vercel projects.
 
 **Single-service option (Render/Railway):** `render.yaml` / root `railway.json`:
 the Nuxt frontend is built as static files and served by the NestJS API, so the page and `/api` share one URL (no CORS setup needed).
 
-- Build: `cd frontend && npm ci && npm run generate && cd ../backend && npm ci && npm run build`
-- Start: `cd backend && npm run start:prod`
+- Build: `cd nuxt && npm ci && npm run generate && cd ../nest && npm ci && npm run build`
+- Start: `cd nest && npm run start:prod`
 - Health check: `/api/health`
 
 The production frontend calls `/api` on the same origin by default.
@@ -121,20 +121,20 @@ Each folder also has a `railway.json` for running the API and the web app as two
 
 | Service | Root | Build | Start | Variables |
 | --- | --- | --- | --- | --- |
-| API | `backend` | `npm run build` | `npm run start:prod` | `CORS_ORIGIN=https://<web-domain>` |
-| Web | `frontend` | `npm run build` | `node .output/server/index.mjs` | `NUXT_PUBLIC_API_BASE=https://<api-domain>/api` |
+| API | `nest` | `npm run build` | `npm run start:prod` | `CORS_ORIGIN=https://<web-domain>` |
+| Web | `nuxt` | `npm run build` | `node .output/server/index.mjs` | `NUXT_PUBLIC_API_BASE=https://<api-domain>/api` |
 
 ### Other platforms
 
 **API (Render, Cloud Run…)**
-- Root: `backend`, build `npm ci && npm run build`, start `npm run start:prod`.
+- Root: `nest`, build `npm ci && npm run build`, start `npm run start:prod`.
 - Env: `CORS_ORIGIN=https://<your-frontend-domain>`; `PORT` is set by the platform.
 - `render.yaml` is included for Render.
 
 **Frontend (Vercel, Netlify…)**
-- Root: `frontend`, build `npm run generate`, output `.output/public`.
+- Root: `nuxt`, build `npm run generate`, output `.output/public`.
 - Env: `NUXT_PUBLIC_API_BASE=https://<your-api-domain>/api`.
 
 ## Logo
 
-Place the official logo at `frontend/public/logo-susiair.png` (from susiair.com). Until it is there, the app shows a vector wordmark in the brand colours.
+Place the official logo at `nuxt/public/logo-susiair.png` (from susiair.com). Until it is there, the app shows a vector wordmark in the brand colours.

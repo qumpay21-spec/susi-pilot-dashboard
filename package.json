@@ -7,7 +7,7 @@
     "node": ">=22"
   },
   "scripts": {
-    "build": "cd frontend && npm ci && npm run generate && cd ../backend && npm ci && npm run build",
-    "start": "cd backend && npm run start:prod"
+    "build": "cd nuxt && npm ci && npm run generate && cd ../nest && npm ci && npm run build",
+    "start": "cd nest && npm run start:prod"
   }
 }
